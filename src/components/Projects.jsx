@@ -33,18 +33,17 @@ const Projects = () => {
       id: 2,
       title: 'Página Web Manchester City',
       description: 'Sitio web moderno y responsivo dedicado al Manchester City con información actualizada.',
-      image: '/api/placeholder/400/250',
+      image: '/images/mcity.png',
       technologies: ['React', 'CSS3', 'Responsive Design', 'React Router'],
       category: 'Frontend',
-      github: 'https://github.com/josezavala/manchester-city-site',
-      demo: 'https://manchester-city-fan-site.vercel.app',
+      github: 'https://github.com/Jazavala1992/manchester-city-react-',
+      demo: 'https://manchester-city-react.vercel.app',
       details: {
         features: [
           'Diseño responsivo y moderno',
           'Navegación fluida con React Router',
           'Secciones informativas del club',
           'Galería de imágenes interactiva',
-          'Animaciones CSS avanzadas',
           'Optimización para dispositivos móviles'
         ],
         highlights: 'Proyecto que demuestra habilidades de diseño frontend y pasión por el fútbol.'
