@@ -1,84 +1,209 @@
 import React, { useEffect, useState } from 'react'
 import { Container, Row, Col, Button } from 'react-bootstrap'
 
+/**
+ * Hero Component - Professional portfolio landing section
+ * Features: Profile photo, typewriter animation, and interactive code display
+ */
 const Hero = () => {
+  // State management for typewriter animation
   const [displayedText, setDisplayedText] = useState('')
   const [currentLine, setCurrentLine] = useState(0)
+  const [currentChar, setCurrentChar] = useState(0)
   
+  // Profile image state management
+  const [imageError, setImageError] = useState(false)
+  const [imageLoaded, setImageLoaded] = useState(false)
+
+  // Code lines for typewriter animation with syntax highlighting
   const codeLines = [
-    "const developer = {",
-    "  name: 'José Zavala',",
-    "  skills: ['React', 'Node.js', 'MySQL', 'Java'],",
-    "  passion: 'Full Stack Development'",
-    "};"
+    { text: "const", type: "keyword" },
+    { text: " dev = {", type: "punctuation" },
+    { text: "\n  ", type: "whitespace" },
+    { text: "name", type: "property" },
+    { text: ": ", type: "punctuation" },
+    { text: "'José Zavala'", type: "string" },
+    { text: ",", type: "punctuation" },
+    { text: "\n  ", type: "whitespace" },
+    { text: "location", type: "property" },
+    { text: ": ", type: "punctuation" },
+    { text: "'La Paz, Bolivia'", type: "string" },
+    { text: ",", type: "punctuation" },
+    { text: "\n  ", type: "whitespace" },
+    { text: "skills", type: "property" },
+    { text: ": [", type: "punctuation" },
+    { text: "'React'", type: "string" },
+    { text: ", ", type: "punctuation" },
+    { text: "'Node.js'", type: "string" },
+    { text: ", ", type: "punctuation" },
+    { text: "'MySQL'", type: "string" },
+    { text: "],", type: "punctuation" },
+    { text: "\n  ", type: "whitespace" },
+    { text: "passion", type: "property" },
+    { text: ": ", type: "punctuation" },
+    { text: "'Full Stack Development'", type: "string" },
+    { text: "\n};", type: "punctuation" }
   ]
 
+  // Profile image fallback paths
+  const imagePaths = [
+    '/images/profile.jpeg',
+    '/images/profile.jpg', 
+    '/images/profile.png'
+  ]
+
+  // Enhanced typewriter effect with character-by-character animation
   useEffect(() => {
     if (currentLine < codeLines.length) {
+      const currentLineData = codeLines[currentLine]
       const timeout = setTimeout(() => {
-        setDisplayedText(prev => prev + codeLines[currentLine] + '\n')
-        setCurrentLine(prev => prev + 1)
-      }, 800 + currentLine * 300)
+        if (currentChar < currentLineData.text.length) {
+          setDisplayedText(prev => prev + currentLineData.text[currentChar])
+          setCurrentChar(prev => prev + 1)
+        } else {
+          setCurrentLine(prev => prev + 1)
+          setCurrentChar(0)
+        }
+      }, currentLineData.text === '\n  ' ? 200 : 50) // Faster typing for whitespace
       
       return () => clearTimeout(timeout)
     }
-  }, [currentLine])
+  }, [currentLine, currentChar, codeLines])
 
+  /**
+   * Smooth scroll navigation to page sections
+   * @param {string} sectionId - Target section ID
+   */
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId)
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' })
+      element.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      })
     }
+  }
+
+  /**
+   * Handle profile image loading error
+   */
+  const handleImageError = () => {
+    console.log('Profile image failed to load, showing fallback avatar')
+    setImageError(true)
+  }
+
+  /**
+   * Handle successful profile image load
+   */
+  const handleImageLoad = () => {
+    console.log('Profile image loaded successfully')
+    setImageLoaded(true)
+    setImageError(false)
+  }
+
+  /**
+   * Render syntax highlighted code
+   */
+  const renderCodeWithSyntax = () => {
+    let renderedCode = ''
+    let currentIndex = 0
+    
+    return codeLines.slice(0, currentLine + 1).map((line, index) => {
+      if (index === currentLine) {
+        // Current line being typed
+        const visibleText = line.text.slice(0, currentChar)
+        return (
+          <span key={index} className={`code-${line.type}`}>
+            {visibleText}
+          </span>
+        )
+      } else {
+        // Completed lines
+        return (
+          <span key={index} className={`code-${line.type}`}>
+            {line.text}
+          </span>
+        )
+      }
+    })
   }
 
   return (
     <section id="home" className="hero-section">
       <Container>
         <Row className="align-items-center min-vh-100">
+          
           {/* Profile Photo Column */}
           <Col lg={3} md={4} className="text-center mb-4 mb-lg-0">
             <div className="profile-photo-container">
+              
               <div className="profile-photo">
-                <img 
-                  src="https://via.placeholder.com/300x300/4A90E2/FFFFFF?text=TU+FOTO" 
-                  alt="José Zavala - Desarrollador Full Stack"
-                  className="profile-image"
-                />
-                <div className="photo-border"></div>
+                {!imageError ? (
+                  <img 
+                    src={imagePaths[0]}
+                    alt="José Zavala - Desarrollador Full Stack"
+                    className={`profile-image ${imageLoaded ? 'loaded' : 'loading'}`}
+                    onError={handleImageError}
+                    onLoad={handleImageLoad}
+                    loading="lazy"
+                  />
+                ) : (
+                  // Professional fallback avatar
+                  <div className="profile-fallback">
+                    <div className="initials">JZ</div>
+                    <div className="fallback-text">José Zavala</div>
+                  </div>
+                )}
               </div>
+              
+              {/* Professional badge */}
               <div className="photo-badge">
-                <i className="fas fa-code"></i>
+                <i className="fas fa-code" aria-hidden="true"></i>
                 <span>Full Stack Developer</span>
               </div>
             </div>
           </Col>
           
-          {/* Content Column */}
+          {/* Main Content Column */}
           <Col lg={5} md={8}>
             <div className="hero-content">
               <h1 className="hero-title">
                 Hola, soy <span className="text-primary">José Zavala</span>
               </h1>
+              
               <h2 className="hero-subtitle">Desarrollador Full Stack</h2>
+              
               <p className="hero-description">
                 Creo aplicaciones web completas desde el frontend hasta el backend, 
                 con experiencia en React, Node.js, bases de datos y desarrollo con Java. 
                 Apasionado por crear soluciones tecnológicas robustas y escalables.
               </p>
+              
+              <div className="hero-location mb-3">
+                <i className="fas fa-map-marker-alt me-2" aria-hidden="true"></i>
+                <span>La Paz, Bolivia</span>
+              </div>
+              
               <div className="hero-buttons">
                 <Button 
                   variant="primary" 
                   size="lg" 
-                  className="me-3"
+                  className="me-3 mb-2"
                   onClick={() => scrollToSection('projects')}
+                  aria-label="Ver proyectos de desarrollo"
                 >
+                  <i className="fas fa-code me-2" aria-hidden="true"></i>
                   Ver Proyectos
                 </Button>
+                
                 <Button 
                   variant="outline-light" 
                   size="lg"
-                  onClick={() => scrollToSection('contact')}
+                  className="mb-2"
+                  href="mailto:zavachs1992@gmail.com"
+                  aria-label="Contactar por email"
                 >
+                  <i className="fas fa-envelope me-2" aria-hidden="true"></i>
                   Contactar
                 </Button>
               </div>
@@ -86,60 +211,15 @@ const Hero = () => {
           </Col>
           
           {/* Code Animation Column */}
-          <Col lg={4}>
-            <div className="hero-image">
-              <div className="code-animation">
+          <Col lg={4} className="d-none d-lg-block">
+            <div className="code-animation">
+              <div className="code-body">
                 <pre className="code-display">
                   <code>
-                    {displayedText.split('\n').map((line, index) => (
-                      <div key={index} className="code-line">
-                        {line && (
-                          <>
-                            {line.includes('const') && (
-                              <span className="code-keyword">const</span>
-                            )}
-                            {line.includes('developer') && !line.includes('const') && (
-                              <span className="code-variable">developer</span>
-                            )}
-                            {line.includes('name') && (
-                              <>
-                                <span className="code-property">name</span>
-                                <span>: </span>
-                                <span className="code-string">'José Zavala'</span>
-                              </>
-                            )}
-                            {line.includes('skills') && (
-                              <>
-                                <span className="code-property">skills</span>
-                                <span>: [</span>
-                                <span className="code-string">'React'</span>
-                                <span>, </span>
-                                <span className="code-string">'Node.js'</span>
-                                <span>, </span>
-                                <span className="code-string">'MySQL'</span>
-                                <span>, </span>
-                                <span className="code-string">'Java'</span>
-                                <span>]</span>
-                              </>
-                            )}
-                            {line.includes('passion') && (
-                              <>
-                                <span className="code-property">passion</span>
-                                <span>: </span>
-                                <span className="code-string">'Full Stack Development'</span>
-                              </>
-                            )}
-                            {line === "};" && <span>{"};"}</span>}
-                            {!line.includes('const') && 
-                             !line.includes('name') && 
-                             !line.includes('skills') && 
-                             !line.includes('passion') && 
-                             line !== "};" && 
-                             line}
-                          </>
-                        )}
-                      </div>
-                    ))}
+                    {renderCodeWithSyntax()}
+                    {currentLine < codeLines.length && (
+                      <span className="cursor">|</span>
+                    )}
                   </code>
                 </pre>
               </div>
@@ -147,21 +227,6 @@ const Hero = () => {
           </Col>
         </Row>
       </Container>
-      
-      {/* Animated background particles */}
-      <div className="hero-particles">
-        {[...Array(20)].map((_, i) => (
-          <div 
-            key={i} 
-            className="particle" 
-            style={{
-              left: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${3 + Math.random() * 4}s`
-            }}
-          />
-        ))}
-      </div>
     </section>
   )
 }

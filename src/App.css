@@ -1132,139 +1132,204 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-/* ===== PROFILE PHOTO STYLES ===== */
+/* ============================================
+   PROFILE PHOTO - SIN ROTACIÓN, VERSION LIMPIA
+   ============================================ */
+
+/* Container de la foto - versión final */
 .profile-photo-container {
-  position: relative;
-  display: inline-block;
-  animation: fadeIn 1s ease-in-out;
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 1.5rem !important;
+  margin-bottom: 2rem !important;
+  z-index: 10 !important;
 }
 
+/* Marco de la foto - SIN animación de rotación */
 .profile-photo {
-  position: relative;
-  display: inline-block;
-  border-radius: 50%;
-  overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-  transition: var(--transition);
+  position: relative !important;
+  width: 250px !important;
+  height: 250px !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-cyan)) !important;
+  padding: 4px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 
+    0 8px 32px rgba(0, 212, 255, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+  transition: all 0.3s ease !important;
+  /* QUITAMOS: animation: profilePhotoRotate 20s linear infinite !important; */
 }
 
+/* Hover effect elegante */
 .profile-photo:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+  transform: scale(1.05) !important;
+  box-shadow: 
+    0 12px 40px rgba(0, 212, 255, 0.6),
+    0 0 0 2px rgba(255, 255, 255, 0.2) !important;
 }
 
+/* Imagen de perfil */
 .profile-image {
-  width: 250px;
-  height: 250px;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 4px solid rgba(255, 255, 255, 0.2);
-  transition: var(--transition);
-  filter: grayscale(20%) brightness(1.1);
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  border-radius: 50% !important;
+  transition: all 0.3s ease !important;
+  filter: saturate(0.9) brightness(1.1) !important;
 }
 
 .profile-image:hover {
-  filter: grayscale(0%) brightness(1.2);
-  transform: scale(1.05);
+  filter: saturate(1.2) brightness(1.2) !important;
 }
 
-.photo-border {
-  position: absolute;
-  top: -8px;
-  left: -8px;
-  right: -8px;
-  bottom: -8px;
-  border: 3px solid var(--primary-color);
-  border-radius: 50%;
-  animation: rotateBorder 10s linear infinite;
-  opacity: 0.8;
-  box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+/* Estados de carga */
+.profile-image.loading {
+  opacity: 0 !important;
 }
 
+.profile-image.loaded {
+  opacity: 1 !important;
+}
+
+/* Avatar fallback profesional */
+.profile-fallback {
+  width: 100% !important;
+  height: 100% !important;
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-cyan)) !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: var(--text-primary) !important;
+  font-weight: bold !important;
+  text-align: center !important;
+  position: relative !important;
+  box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Iniciales del fallback */
+.initials {
+  font-size: 4rem !important;
+  font-weight: 800 !important;
+  line-height: 0.8 !important;
+  margin-bottom: 0.3rem !important;
+  text-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(255, 255, 255, 0.3) !important;
+  color: var(--text-primary) !important;
+  font-family: 'Inter', sans-serif !important;
+  letter-spacing: -0.1em !important;
+}
+
+/* Texto del fallback */
+.fallback-text {
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  color: rgba(255, 255, 255, 0.95) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+  letter-spacing: 0.5px !important;
+}
+
+/* Badge profesional - con animación sutil */
 .photo-badge {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  background: var(--gradient-accent);
-  color: var(--bg-dark);
-  padding: 8px 12px;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  box-shadow: var(--box-shadow);
-  animation: pulse 2s infinite;
-  border: 2px solid var(--primary-color);
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-cyan)) !important;
+  color: var(--text-primary) !important;
+  padding: 0.8rem 2rem !important;
+  border-radius: 25px !important;
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.7rem !important;
+  box-shadow: 
+    0 6px 20px rgba(0, 212, 255, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  animation: badgeFloatSubtle 4s ease-in-out infinite !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  transition: all 0.3s ease !important;
 }
 
-.photo-badge i {
-  margin-right: 5px;
+.photo-badge:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(0, 212, 255, 0.6) !important;
 }
 
-/* Animations for profile photo */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
+/* Animación sutil del badge (más discreta) */
+@keyframes badgeFloatSubtle {
+  0%, 100% { 
+    transform: translateY(0); 
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes rotateBorder {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
+  50% { 
+    transform: translateY(-1px); 
   }
 }
 
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
+/* Mejorar la animación del cursor en el código */
+.cursor {
+  animation: blink 1s infinite;
+  color: var(--primary-color);
 }
 
-/* Responsive adjustments for profile photo */
-@media (max-width: 992px) {
-  .profile-image {
-    width: 200px;
-    height: 200px;
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* REMOVER estas animaciones de rotación si existen */
+@keyframes profilePhotoRotate {
+  /* COMENTADO - ya no se usa */
+  /* from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); } */
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .profile-photo {
+    width: 200px !important;
+    height: 200px !important;
   }
   
-  .profile-photo-container {
-    margin-bottom: 2rem;
+  .initials {
+    font-size: 3rem !important;
   }
-}
-
-@media (max-width: 768px) {
-  .profile-image {
-    width: 180px;
-    height: 180px;
+  
+  .fallback-text {
+    font-size: 0.9rem !important;
   }
   
   .photo-badge {
-    font-size: 0.7rem;
-    padding: 6px 10px;
+    font-size: 0.85rem !important;
+    padding: 0.6rem 1.5rem !important;
   }
 }
 
 @media (max-width: 576px) {
-  .profile-image {
-    width: 150px;
-    height: 150px;
+  .profile-photo {
+    width: 170px !important;
+    height: 170px !important;
   }
   
-  .photo-border {
-    top: -6px;
-    left: -6px;
-    right: -6px;
-    bottom: -6px;
-    border-width: 2px;
+  .initials {
+    font-size: 2.5rem !important;
+  }
+  
+  .fallback-text {
+    font-size: 0.8rem !important;
+  }
+  
+  .photo-badge {
+    font-size: 0.8rem !important;
+    padding: 0.5rem 1.2rem !important;
   }
 }
+
